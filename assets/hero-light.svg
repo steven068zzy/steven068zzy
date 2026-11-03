@@ -1,66 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" role="img" aria-labelledby="t">
-<title id="t">Ziyuan Zhao: robotics and computer vision for precision livestock farming</title>
-<style>@font-face{font-family:'LMDisplay';src:url(data:font/woff2;base64,d09GMk9UVE8AAAV4AAsAAAAAB+QAAAUvAAIBBgAAAAAAAAAAAAAAAAAAAAAAAAAADYlmG4EKHDAGYABsATYCJAMsBAYFBgcgGx0HUZQNTgDgZ4FTZo8OFVcdx60JURyTjgzvCp8+4lQveTeKODo9ZZUO3fuXDMRQmUMERUNcp8qkNFUJ62MZ4OG55r9btlVZNA24aJRBmCAHtASMEk/caG8N8L80cNKmlmwVvYX+76Sp16mZyhQitoMkQ5ixwNt/T67P/73Tvysb28q+dgLJSgNO5L/b3DQmffCWllCY+Ng0NQswnZZ+kcDoD2O3EbEwjyAxEJFJXv4mWfXgSP/DFwHmb3yELcIpCHtROMiEo1w9oid7ryedVGtC+l+Wla+m/XbyFZP/DwsykcaXle8vGQ0KCiMdGhS75xVTAk7nPDs4OdrbfUOG8RxAe36AU4EUknrMy+6olrVXuYzCfC55B6z/wTXMR43FETntZJaXlu3tHfHVtPz9nZwmM+17nFXHxjsVDZREZTRQyqQceJP+l4mc8f+LU6pjU2N6MCJKkwPEJwYYPrCSOgOAFNlyFCriBKFCjVh0GQgSlvhQGP057+KPS0aXTC/VXPaReTIPDIQFW35mPjpdBuqeUaHWeLATMm5gHjdYtcA6e8t0J/pZiZqSfXVCclZJamUZPyMwLjYxMR7NXBnOb6D7RyxyqBFoJryL0nG7quooMLKjXiyP718N1IwVQwtRpU0nXTSUvYOIX7/MvXwLXSPbpu7qrKHxWthbMSKpFV01EKliUrYc5MZJWhAzAwYiDoj2cUvJOQwmMoqS3AjnDIOJtBgTJL2n2R4XqwK9gKi0E5fT5V04oRTh/m4Z+DK6tLyeqmQCyQLiI3iMWOmRLQdFCcmNiNUAKiBdN5rqTUQduIwubVN6CTJmfzhK+Xn+PoF8P5+CwKLSvIJiyGTns6a6TXD8b6K57kMCuYmntk8iw5gpflcFclExopoRk6++DDEXv/5grDA3VcY2QcPTBJp5WPLtaFObyhZf5N0VP9pJtYsGy7tgXWFL7QDd1eztWIpqTLGSK8Vj37Pm7AfzvYKzqr1T+KBkW4fFGWUpVTJLwUeZLBuiGS3hU3t1vj8/ACm987n7hrIFgTguLQ1L8mADWO89WB2DBdkNlTMUcZFeNi8WFPj68QW+fvn8kuKC/BLIY0ZSe1Fkcu/UhorcEp3lOeBh9c3rx9F9g5D5BqseWyuwjRCRMvAJW5Z7wNCsMq9V26MHq0WpSKjI5QkBO8B6ydwEeQmcCWcsCkBeoDle6BFFRSTExoZBQqRE1WW65F2ZOBVTxSWiUlgO9vpYYm/a0wWL/JAXGE6OdclCjLeUc9Tr5l4fVOlwb3G+AJWI0rPzqLywnAC/8GCBTZt713jjaH8hZDLYXM5UWZcwm+axk0JSzpoLuEQuMvo2KaVJCpeF/ww5lxKF/lAaz40gw5x8rsJNrt5jsrQSzZXK/Zc5i+E4MZoKFeFCyOZyeWpBAHTgQxQ8LSOvDGat6ZE+mI2bxwZghgQALqGe3vaRAWgBIKRNsem4VhxBLctwwWsohxAHgbgTGCTI0DZo77zjWlOROYsMmwSFcTmMsCbQjwDWQeMwMjjMSaUFFNBj+1gFQO60iBoQJzAwKTbwJ1xV/soCJHFieu47eT5I7eSAzkGP2TLlRKeLAeBVMzgK8BS03WKCERwMTiRSo1m3QeOmC4CbuwwoYWe1W7uudK5THe8IAQOE92WkUW+7OqmZ4v5qyfgaALz73T8HwKrh9250djKiNnsGwMFw/lhq374DFgod6DBt8nfrkhVAn+Eg7OBjA/80AfO0FZ4iKgQAiWX8+lAEUEWsblcDHINgO37iAAA=) format('woff2');}@font-face{font-family:'LMSerifItalic';src:url(data:font/woff2;base64,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) format('woff2');}@font-face{font-family:'JBMono';src:url(data:font/woff2;base64,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) format('woff2');}.display{font-family:'LMDisplay','Latin Modern Roman', 'CMU Serif', Georgia, 'Times New Roman', serif;}.serif-italic{font-family:'LMSerifItalic','Latin Modern Roman', 'CMU Serif', Georgia, 'Times New Roman', serif;}.mono{font-family:'JBMono','JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;}</style>
-<text x="4.0" y="60.0" class="mono" font-size="12" fill="#656D76" letter-spacing="0.5" >steven068zzy</text>
-<text x="108.4" y="60.0" class="mono" font-size="12" fill="#8C959F" letter-spacing="0.5" >College Station, TX</text>
-<text x="2.0" y="128.0" class="display" font-size="62" fill="#1F2328" >Ziyuan Zhao</text>
-<text x="334.5" y="128.0" class="serif-italic" font-size="30" fill="#656D76" >Steven</text>
-<text x="4.0" y="176.0" class="serif-italic" font-size="23" fill="#1F2328" >Robotics &amp; computer vision</text>
-<text x="4.0" y="204.0" class="serif-italic" font-size="23" fill="#1F2328" >for precision livestock farming.</text>
-<text x="4.0" y="252.0" class="mono" font-size="12.5" fill="#656D76" >PhD researcher, Texas A&amp;M</text>
-<circle cx="205.5" cy="248" r="1.6" fill="#8C959F"/>
-<text x="219.5" y="252.0" class="mono" font-size="12.5" fill="#656D76" >Co-founder, Smart Swine</text>
-<defs><clipPath id="house"><rect x="520" y="36" width="376" height="232" rx="4"/></clipPath><pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse" x="520" y="36"><path d="M16 0H0V16" fill="none" stroke="#E6EAEF" stroke-width="1"/></pattern></defs>
-<rect x="520" y="36" width="376" height="232" rx="4" fill="url(#grid)"/>
-<rect x="520" y="36" width="376" height="232" rx="4" fill="none" stroke="#D0D7DE" stroke-width="1.2"/>
-<line x1="538" y1="65.0" x2="878" y2="65.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
-<circle cx="554" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="588" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="622" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="656" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="690" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="724" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="758" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="792" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="826" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="860" cy="65.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<line x1="538" y1="123.0" x2="878" y2="123.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
-<circle cx="554" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="588" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="622" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="656" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="690" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="724" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="758" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="792" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="826" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="860" cy="123.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<line x1="538" y1="181.0" x2="878" y2="181.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
-<circle cx="554" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="588" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="622" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="656" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="690" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="724" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="758" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="792" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="826" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="860" cy="181.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<line x1="538" y1="239.0" x2="878" y2="239.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
-<circle cx="554" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="588" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="622" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="656" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="690" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="724" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="758" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="792" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="826" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<circle cx="860" cy="239.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
-<line x1="538" y1="94.0" x2="878" y2="94.0" stroke="#8C959F" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>
-<line x1="538" y1="152.0" x2="878" y2="152.0" stroke="#8C959F" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>
-<line x1="538" y1="210.0" x2="878" y2="210.0" stroke="#8C959F" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>
-<path d="M550,52.0 L866,52.0 L866,85.0 L550,85.0 L550,161.0 L866,161.0 L866,201.0 L550,201.0 L550,252.0 L866,252.0" fill="none" stroke="#2F7D6B" stroke-width="1.2" stroke-dasharray="1 6" stroke-linecap="round" opacity="0.9"/>
-<g><circle r="9" fill="#2F7D6B" opacity="0.18"><animateMotion dur="34s" repeatCount="indefinite" path="M550,52.0 L866,52.0 L866,85.0 L550,85.0 L550,161.0 L866,161.0 L866,201.0 L550,201.0 L550,252.0 L866,252.0"/></circle><circle r="3.4" fill="#2F7D6B"><animateMotion dur="34s" repeatCount="indefinite" path="M550,52.0 L866,52.0 L866,85.0 L550,85.0 L550,161.0 L866,161.0 L866,201.0 L550,201.0 L550,252.0 L866,252.0"/></circle></g>
-<text x="520.0" y="288.0" class="mono" font-size="10.5" fill="#8C959F" letter-spacing="0.3" >broiler house · feeder lines · UAV patrol</text>
+<title id="t">Ziyuan Zhao: robotics and computer vision for precision livestock farming. ziyuanzhao.org</title>
+<style>.sans{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif;}.mono{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;}</style>
+<text x="2" y="112" class="sans"><tspan font-size="58" font-weight="600" fill="#1F2328">Ziyuan Zhao</tspan><tspan dx="14" font-size="26" fill="#656D76">Steven</tspan></text>
+<text x="4.0" y="162.0" class="sans" font-size="22" fill="#1F2328">Robotics &amp; computer vision</text>
+<text x="4.0" y="192.0" class="sans" font-size="22" fill="#1F2328">for precision livestock farming.</text>
+<text x="4.0" y="234.0" class="sans" font-size="15" fill="#656D76">PhD researcher, Texas A&amp;M  ·  Co-founder, Smart Swine</text>
+<text x="4.0" y="276.0" class="sans" font-size="18" fill="#2F7D6B" font-weight="600">ziyuanzhao.org  →</text>
+<defs><pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse" x="520" y="34"><path d="M16 0H0V16" fill="none" stroke="#E6EAEF" stroke-width="1"/></pattern></defs>
+<rect x="520" y="34" width="376" height="232" rx="4" fill="url(#grid)"/>
+<rect x="520" y="34" width="376" height="232" rx="4" fill="none" stroke="#D0D7DE" stroke-width="1.2"/>
+<line x1="538" y1="63.0" x2="878" y2="63.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="554" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="588" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="622" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="656" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="690" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="724" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="758" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="792" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="826" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="860" cy="63.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<line x1="538" y1="121.0" x2="878" y2="121.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="554" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="588" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="622" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="656" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="690" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="724" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="758" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="792" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="826" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="860" cy="121.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<line x1="538" y1="179.0" x2="878" y2="179.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="554" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="588" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="622" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="656" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="690" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="724" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="758" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="792" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="826" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="860" cy="179.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<line x1="538" y1="237.0" x2="878" y2="237.0" stroke="#656D76" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="554" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="588" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="622" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="656" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="690" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="724" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="758" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="792" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="826" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<circle cx="860" cy="237.0" r="2.6" fill="#FFFFFF" stroke="#656D76" stroke-width="1.2"/>
+<line x1="538" y1="92.0" x2="878" y2="92.0" stroke="#8C959F" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>
+<line x1="538" y1="150.0" x2="878" y2="150.0" stroke="#8C959F" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>
+<line x1="538" y1="208.0" x2="878" y2="208.0" stroke="#8C959F" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>
+<path d="M550,50.0 L866,50.0 L866,83.0 L550,83.0 L550,159.0 L866,159.0 L866,199.0 L550,199.0 L550,250.0 L866,250.0" fill="none" stroke="#2F7D6B" stroke-width="1.2" stroke-dasharray="1 6" stroke-linecap="round" opacity="0.9"/>
+<g><circle r="9" fill="#2F7D6B" opacity="0.18"><animateMotion dur="34s" repeatCount="indefinite" path="M550,50.0 L866,50.0 L866,83.0 L550,83.0 L550,159.0 L866,159.0 L866,199.0 L550,199.0 L550,250.0 L866,250.0"/></circle><circle r="3.4" fill="#2F7D6B"><animateMotion dur="34s" repeatCount="indefinite" path="M550,50.0 L866,50.0 L866,83.0 L550,83.0 L550,159.0 L866,159.0 L866,199.0 L550,199.0 L550,250.0 L866,250.0"/></circle></g>
 </svg>
