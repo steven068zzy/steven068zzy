@@ -67,157 +67,255 @@ class SVG:
         )
 
 
-# ------------------------------------------------------------------ scene parts
-def bird(s: SVG, x, y, ang_deg, sc=1.0):
-    """A broiler seen from above: body, head, beak."""
-    a = math.radians(ang_deg)
-    hx, hy = x + math.cos(a) * 17 * sc, y + math.sin(a) * 17 * sc
-    bx, by = x + math.cos(a) * 23 * sc, y + math.sin(a) * 23 * sc
-    # shadow
-    s.raw(f'<ellipse cx="{x+2:.1f}" cy="{y+3:.1f}" rx="{16*sc:.1f}" ry="{11*sc:.1f}" '
-          f'transform="rotate({ang_deg} {x+2:.1f} {y+3:.1f})" fill="#000" opacity="0.35"/>')
-    s.raw(f'<ellipse cx="{x:.1f}" cy="{y:.1f}" rx="{16*sc:.1f}" ry="{11*sc:.1f}" '
-          f'transform="rotate({ang_deg} {x:.1f} {y:.1f})" fill="{BIRD}" stroke="{BIRD_EDGE}" stroke-width="0.8"/>')
-    # wing crease
-    s.raw(f'<path d="M{x-6*sc:.1f},{y:.1f} Q{x:.1f},{y-3*sc:.1f} {x+7*sc:.1f},{y:.1f}" fill="none" stroke="{BIRD_EDGE}" '
-          f'stroke-width="0.7" opacity="0.7" transform="rotate({ang_deg} {x:.1f} {y:.1f})"/>')
-    s.raw(f'<circle cx="{hx:.1f}" cy="{hy:.1f}" r="{5.6*sc:.1f}" fill="{BIRD}" stroke="{BIRD_EDGE}" stroke-width="0.8"/>')
-    # beak
-    pa = a + math.pi / 2
-    s.raw(f'<path d="M{hx+math.cos(pa)*2.2:.1f},{hy+math.sin(pa)*2.2:.1f} L{bx:.1f},{by:.1f} '
-          f'L{hx-math.cos(pa)*2.2:.1f},{hy-math.sin(pa)*2.2:.1f} Z" fill="#D9A441"/>')
+# ------------------------------------------------------------------ isometric scene
+K = 0.84                      # world unit -> px
+CX, SY = 0.866 * K, 0.5 * K   # 2:1-ish true isometric
 
 
-def bird_bbox(x, y, ang_deg, sc=1.0):
-    a = math.radians(ang_deg)
-    rx, ry = 16 * sc, 11 * sc
-    ex = math.sqrt((rx * math.cos(a)) ** 2 + (ry * math.sin(a)) ** 2)
-    ey = math.sqrt((rx * math.sin(a)) ** 2 + (ry * math.cos(a)) ** 2)
-    bx, by = x + math.cos(a) * 23 * sc, y + math.sin(a) * 23 * sc
-    x0, x1 = min(x - ex, bx) - 4, max(x + ex, bx) + 4
-    y0, y1 = min(y - ey, by) - 4, max(y + ey, by) + 4
-    return x0, y0, x1 - x0, y1 - y0
+class Iso:
+    """Project world (x, y, z) onto the page; x runs right-down, y left-down, z up."""
+    def __init__(self, ox, oy):
+        self.ox, self.oy = ox, oy
+
+    def p(self, x, y, z=0.0):
+        return self.ox + (x - y) * CX, self.oy + (x + y) * SY - z * K
+
+    def pts(self, seq):
+        return " ".join(f"{px:.1f},{py:.1f}" for px, py in (self.p(*q) for q in seq))
 
 
-def brackets(s: SVG, x, y, w, h, color=ACCENT, L=7, sw=1.5):
-    """Corner brackets instead of a full box."""
-    for cx, cy, dx, dy in ((x, y, 1, 1), (x + w, y, -1, 1), (x, y + h, 1, -1), (x + w, y + h, -1, -1)):
-        s.raw(f'<path d="M{cx:.1f},{cy+dy*L:.1f} L{cx:.1f},{cy:.1f} L{cx+dx*L:.1f},{cy:.1f}" '
-              f'fill="none" stroke="{color}" stroke-width="{sw}" stroke-linecap="round"/>')
+def shade(hex_, f):
+    """Lighten (f>1) or darken (f<1) a hex colour."""
+    r, g, b = (int(hex_[i:i + 2], 16) for i in (1, 3, 5))
+    r, g, b = (max(0, min(255, int(c * f))) for c in (r, g, b))
+    return f"#{r:02X}{g:02X}{b:02X}"
+
+
+def cuboid(s: SVG, iso: Iso, x, y, z, lx, ly, lz, color, stroke=None, sw=0.7, rx_top=None):
+    """Solid box: top, right (x+lx) and left (y+ly) faces, lit from the upper left."""
+    top = [(x, y, z + lz), (x + lx, y, z + lz), (x + lx, y + ly, z + lz), (x, y + ly, z + lz)]
+    right = [(x + lx, y, z), (x + lx, y + ly, z), (x + lx, y + ly, z + lz), (x + lx, y, z + lz)]
+    left = [(x, y + ly, z), (x + lx, y + ly, z), (x + lx, y + ly, z + lz), (x, y + ly, z + lz)]
+    st = f' stroke="{stroke}" stroke-width="{sw}" stroke-linejoin="round"' if stroke else ""
+    s.raw(f'<polygon points="{iso.pts(left)}" fill="{shade(color, 0.72)}"{st}/>')
+    s.raw(f'<polygon points="{iso.pts(right)}" fill="{shade(color, 0.86)}"{st}/>')
+    s.raw(f'<polygon points="{iso.pts(top)}" fill="{color}"{st}/>')
+
+
+def wire_box(s: SVG, iso: Iso, x, y, z, lx, ly, lz, color, sw=1.1):
+    """3-D detection box: back edges faint, front edges solid."""
+    c = lambda i, j, k: (x + i * lx, y + j * ly, z + k * lz)
+    edges = [((0,0,0),(1,0,0)),((1,0,0),(1,1,0)),((1,1,0),(0,1,0)),((0,1,0),(0,0,0)),
+             ((0,0,1),(1,0,1)),((1,0,1),(1,1,1)),((1,1,1),(0,1,1)),((0,1,1),(0,0,1)),
+             ((0,0,0),(0,0,1)),((1,0,0),(1,0,1)),((1,1,0),(1,1,1)),((0,1,0),(0,1,1))]
+    for a, b in edges:
+        back = (a[0] == 0 and b[0] == 0 and a[1] == 0 and b[1] == 0) or (a == (0,0,0) and b == (0,0,1)) \
+               or ((a[0] + b[0] == 0) and a[2] == 0 and b[2] == 0) or ((a[1] + b[1] == 0) and a[2] == 0 and b[2] == 0)
+        p1, p2 = iso.p(*c(*a)), iso.p(*c(*b))
+        s.raw(f'<line x1="{p1[0]:.1f}" y1="{p1[1]:.1f}" x2="{p2[0]:.1f}" y2="{p2[1]:.1f}" stroke="{color}" '
+              f'stroke-width="{sw}" opacity="{0.35 if back else 0.95}" stroke-linecap="round"/>')
 
 
 def label(s: SVG, x, y, txt):
     w = 7 * len(txt) + 10
-    s.raw(f'<rect x="{x:.1f}" y="{y-11:.1f}" width="{w}" height="14" rx="3" fill="{ACCENT}"/>')
+    s.raw(f'<rect x="{x:.1f}" y="{y-11:.1f}" width="{w}" height="{14}" rx="3" fill="{ACCENT}"/>')
     s.text(x + 5, y, txt, "mono", 10, PANEL, weight=600)
 
 
-def trail(s: SVG, pts, color=ACCENT):
-    d = "M" + " L".join(f"{px:.1f},{py:.1f}" for px, py in pts)
-    s.raw(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.7"/>')
-    for px, py in pts[:-1]:
-        s.raw(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="1.8" fill="{color}" opacity="0.7"/>')
+def floor_ellipse(s: SVG, iso: Iso, x, y, r, **kw):
+    px, py = iso.p(x, y, 0)
+    attrs = " ".join(f'{k.replace("_", "-")}="{v}"' for k, v in kw.items())
+    s.raw(f'<ellipse cx="{px:.1f}" cy="{py:.1f}" rx="{r*1.22*K:.1f}" ry="{r*0.71*K:.1f}" {attrs}/>')
 
 
-def drone_shadow(s: SVG, x, y, sc=1.0):
-    """Blurred shadow on the floor, offset so the aircraft reads as airborne."""
-    s.raw(f'<ellipse cx="{x+12*sc:.1f}" cy="{y+22*sc:.1f}" rx="{40*sc:.1f}" ry="{26*sc:.1f}" fill="#000" opacity="0.5" filter="url(#blur)"/>')
-
-
-def drone(s: SVG, x, y, sc=1.0):
-    """Quadcopter from above, nose pointing left (toward its camera footprint)."""
-    arm = 30 * sc
-    s.raw(f'<g transform="translate({x:.1f},{y:.1f}) scale({sc})">')
-    # prop discs first (they sit under the arms visually? no: props are on top, but the
-    # translucent disc goes under so the arm stays visible through it)
-    motors = [(45, 20), (135, 70), (225, 115), (315, 160)]
-    for a, blade in motors:
-        mx, my = math.cos(math.radians(a)) * 30, math.sin(math.radians(a)) * 30
-        s.raw(f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="15" fill="#FFFFFF" opacity="0.07"/>')
-        s.raw(f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="15" fill="none" stroke="#C9D1D9" stroke-width="0.6" opacity="0.45"/>')
-    # arms
-    for a, _ in motors:
-        ax, ay = math.cos(math.radians(a)) * 30, math.sin(math.radians(a)) * 30
-        s.raw(f'<line x1="0" y1="0" x2="{ax:.1f}" y2="{ay:.1f}" stroke="#C9D1D9" stroke-width="6" stroke-linecap="round"/>')
-        s.raw(f'<line x1="0" y1="0" x2="{ax:.1f}" y2="{ay:.1f}" stroke="#6E7681" stroke-width="1.6" stroke-linecap="round"/>')
-    # body: lower plate, upper plate, battery
-    s.raw('<rect x="-17" y="-11" width="34" height="22" rx="7" fill="#E6EDF3"/>')
-    s.raw('<rect x="-12" y="-7" width="24" height="14" rx="4" fill="#C9D1D9"/>')
-    s.raw('<rect x="-3" y="-5" width="12" height="10" rx="2" fill="#8B949E"/>')
-    # gimbal camera at the nose
-    s.raw('<circle cx="-18" cy="0" r="6" fill="#30363D" stroke="#C9D1D9" stroke-width="1.2"/>')
-    s.raw(f'<circle cx="-18" cy="0" r="2.8" fill="{ACCENT}"/>')
-    # rear LED
-    s.raw('<circle cx="15" cy="0" r="1.8" fill="#D9534F"/>')
-    # motors and blades on top
-    for a, blade in motors:
-        mx, my = math.cos(math.radians(a)) * 30, math.sin(math.radians(a)) * 30
-        s.raw(f'<ellipse cx="{mx:.1f}" cy="{my:.1f}" rx="14" ry="2.6" fill="#E6EDF3" opacity="0.9" '
-              f'transform="rotate({blade} {mx:.1f} {my:.1f})"/>')
-        s.raw(f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="5" fill="#30363D" stroke="#C9D1D9" stroke-width="1.2"/>')
-        s.raw(f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="1.6" fill="#C9D1D9"/>')
+def bird3d(s: SVG, iso: Iso, x, y, facing=1, sc=1.0):
+    """White broiler sprite standing at world (x, y). facing=1 looks screen-right."""
+    px, py = iso.p(x, y, 0)
+    s.raw(f'<ellipse cx="{px+2:.1f}" cy="{py:.1f}" rx="{14*sc:.1f}" ry="{5.5*sc:.1f}" fill="#000" opacity="0.45" filter="url(#blur2)"/>')
+    s.raw(f'<g transform="translate({px:.1f},{py:.1f}) scale({facing*sc},{sc})">')
+    # legs and feet
+    for lx in (-1, 5):
+        s.raw(f'<path d="M{lx},-6 L{lx+1},-0.5 M{lx-2.5},-0.5 L{lx+1},-0.5 L{lx+3.5},-0.5" fill="none" stroke="#E0A030" stroke-width="1.3" stroke-linecap="round"/>')
+    # tail fan
+    s.raw('<path d="M-9,-14 L-18,-23 L-20,-18 L-21,-13 L-19,-9 L-9,-9 Z" fill="#CBD3DB" stroke="#AEB8C2" stroke-width="0.6"/>')
+    s.raw('<path d="M-11,-12 L-19,-19 M-11,-11 L-20,-14 M-11,-10 L-19,-10" fill="none" stroke="#AEB8C2" stroke-width="0.5" opacity="0.8"/>')
+    # body with lit back
+    s.raw('<ellipse cx="0" cy="-11" rx="13" ry="8.5" transform="rotate(8 0 -11)" fill="url(#birdside)" stroke="#AEB8C2" stroke-width="0.7"/>')
+    # folded wing
+    s.raw('<path d="M-6,-13 C-2,-18 7,-17 10,-12 C6,-9 -1,-8 -6,-13 Z" fill="#D7DEE5" stroke="#B9C2CC" stroke-width="0.6"/>')
+    # neck and head
+    s.raw('<path d="M8,-16 C10,-20 12,-23 14,-24 L17,-22 C16,-19 13,-15 11,-13 Z" fill="#E9EEF2" stroke="#AEB8C2" stroke-width="0.5"/>')
+    s.raw('<circle cx="16" cy="-24" r="4.6" fill="url(#birdside)" stroke="#AEB8C2" stroke-width="0.7"/>')
+    s.raw('<path d="M13,-28 L14.5,-30.5 L16,-28.5 L17.5,-31 L19,-28.5" fill="#C9473C" stroke="#C9473C" stroke-width="1.2" stroke-linejoin="round"/>')
+    s.raw('<circle cx="17.6" cy="-25" r="0.9" fill="#1F2328"/>')
+    s.raw('<path d="M20.2,-25.5 L25,-24 L20.2,-22.6 Z" fill="#E0A030"/>')
+    s.raw('<path d="M18.5,-21.5 L19,-19.5" stroke="#C9473C" stroke-width="1.4" stroke-linecap="round"/>')  # wattle
     s.raw('</g>')
 
 
+def drone3d(s: SVG, iso: Iso, x, y, z):
+    """Quadcopter hovering at world (x, y, z), nose toward +y (screen left-down)."""
+    cx, cy = iso.p(x, y, z)
+    arm = 15
+    motors = [(x + arm, y + arm), (x - arm, y + arm), (x - arm, y - arm), (x + arm, y - arm)]
+    # arms
+    for mx, my in motors:
+        ax, ay = iso.p(mx, my, z)
+        s.raw(f'<line x1="{cx:.1f}" y1="{cy:.1f}" x2="{ax:.1f}" y2="{ay:.1f}" stroke="#C9D1D9" stroke-width="5.5" stroke-linecap="round"/>')
+        s.raw(f'<line x1="{cx:.1f}" y1="{cy:.1f}" x2="{ax:.1f}" y2="{ay:.1f}" stroke="#6E7681" stroke-width="1.4" stroke-linecap="round"/>')
+    # body box and gimbal under the nose
+    cuboid(s, iso, x - 8, y - 10, z - 3, 16, 20, 7, "#E6EDF3", stroke="#8B949E", sw=0.6)
+    gx, gy = iso.p(x, y + 10, z - 6)
+    s.raw(f'<circle cx="{gx:.1f}" cy="{gy:.1f}" r="5.2" fill="#30363D" stroke="#C9D1D9" stroke-width="1.1"/>')
+    s.raw(f'<circle cx="{gx:.1f}" cy="{gy:.1f}" r="2.4" fill="{ACCENT}"/>')
+    tx, ty = iso.p(x, y - 10, z + 4)
+    s.raw(f'<circle cx="{tx:.1f}" cy="{ty:.1f}" r="1.5" fill="#D9534F"/>')
+    # motors and prop discs
+    for i, (mx, my) in enumerate(motors):
+        ax, ay = iso.p(mx, my, z + 1)
+        s.raw(f'<rect x="{ax-3.5:.1f}" y="{ay-2.5:.1f}" width="7" height="6" rx="1.8" fill="#30363D" stroke="#C9D1D9" stroke-width="0.9"/>')
+        px, py = iso.p(mx, my, z + 5)
+        s.raw(f'<ellipse cx="{px:.1f}" cy="{py:.1f}" rx="15" ry="7.5" fill="#FFFFFF" opacity="0.08"/>')
+        s.raw(f'<ellipse cx="{px:.1f}" cy="{py:.1f}" rx="15" ry="7.5" fill="none" stroke="#C9D1D9" stroke-width="0.6" opacity="0.5"/>')
+        s.raw(f'<ellipse cx="{px:.1f}" cy="{py:.1f}" rx="14" ry="2" fill="#E6EDF3" opacity="0.9" transform="rotate({[20, 110, 65, 150][i]} {px:.1f} {py:.1f})"/>')
+        s.raw(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="1.6" fill="#C9D1D9"/>')
+
+
+def ugv3d(s: SVG, iso: Iso, x, y, arm):
+    """Tracked robot, 44 x 30 x 14 world units, parked with its nose toward +x.
+    arm = ((base), (elbow), (wrist), (tip)) in world coordinates."""
+    L, Wd, H = 44, 30, 14
+    # shadow + tracks + chassis + deck
+    floor_ellipse(s, iso, x + L / 2 + 4, y + Wd / 2 + 6, 26, fill="#000", opacity="0.4", filter="url(#blur2)")
+    for ty in (y - 1, y + Wd - 7):
+        cuboid(s, iso, x - 2, ty, 0, L + 4, 8, 8, "#2B3139", stroke="#484F58", sw=0.6)
+        # tread marks on the visible long face (y + 8)
+        for tx in range(int(x + 1), int(x + L + 1), 4):
+            a, b = iso.p(tx, ty + 8, 1), iso.p(tx, ty + 8, 7)
+            s.raw(f'<line x1="{a[0]:.1f}" y1="{a[1]:.1f}" x2="{b[0]:.1f}" y2="{b[1]:.1f}" stroke="#484F58" stroke-width="1"/>')
+    cuboid(s, iso, x, y + 4, 5, L, Wd - 8, H - 4, "#AEB7C2", stroke="#6E7681", sw=0.6)
+    cuboid(s, iso, x + 4, y + 7, H + 1, L - 14, Wd - 14, 2, "#8B949E")
+    # lidar puck at the front
+    lx, ly = x + L - 8, y + Wd / 2
+    cuboid(s, iso, lx - 4, ly - 4, H + 1, 8, 8, 6, "#30363D", stroke="#C9D1D9", sw=0.8)
+    tpx, tpy = iso.p(lx, ly, H + 7)
+    s.raw(f'<ellipse cx="{tpx:.1f}" cy="{tpy:.1f}" rx="4.8" ry="2.4" fill="#484F58" stroke="#C9D1D9" stroke-width="0.8"/>')
+    hx, hy = iso.p(x + L, y + Wd / 2, 9)
+    s.raw(f'<circle cx="{hx:.1f}" cy="{hy:.1f}" r="1.5" fill="{ACCENT}"/>')
+    # arm
+    base, elbow, wrist, tip = arm
+    pb, pe, pw, pt = (iso.p(*q) for q in (base, elbow, wrist, tip))
+    bx, by = iso.p(base[0], base[1], base[2] - 3)
+    s.raw(f'<ellipse cx="{bx:.1f}" cy="{by:.1f}" rx="7" ry="3.5" fill="#30363D" stroke="#C9D1D9" stroke-width="1"/>')
+    d = f"M{pb[0]:.1f},{pb[1]:.1f} L{pe[0]:.1f},{pe[1]:.1f} L{pw[0]:.1f},{pw[1]:.1f}"
+    s.raw(f'<path d="{d}" fill="none" stroke="#6E7681" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>')
+    s.raw(f'<path d="{d}" fill="none" stroke="#E6EDF3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>')
+    s.raw(f'<path d="{d}" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.7" transform="translate(-1,-1.4)"/>')
+    for (jx, jy), r in ((pb, 5.2), (pe, 4.6), (pw, 4)):
+        s.raw(f'<circle cx="{jx:.1f}" cy="{jy:.1f}" r="{r}" fill="#30363D" stroke="#C9D1D9" stroke-width="1.2"/>')
+        s.raw(f'<circle cx="{jx:.1f}" cy="{jy:.1f}" r="{r*0.38:.1f}" fill="#C9D1D9"/>')
+    # gripper: short link to the tip, then two fingers
+    s.raw(f'<line x1="{pw[0]:.1f}" y1="{pw[1]:.1f}" x2="{pt[0]:.1f}" y2="{pt[1]:.1f}" stroke="#C9D1D9" stroke-width="3.2" stroke-linecap="round"/>')
+    ux, uy = pt[0] - pw[0], pt[1] - pw[1]
+    n = math.hypot(ux, uy) or 1
+    ux, uy = ux / n, uy / n
+    nx, ny = -uy, ux
+    s.raw(f'<line x1="{pt[0]-nx*5:.1f}" y1="{pt[1]-ny*5:.1f}" x2="{pt[0]+nx*5:.1f}" y2="{pt[1]+ny*5:.1f}" stroke="#C9D1D9" stroke-width="2.6" stroke-linecap="round"/>')
+    for sgn in (-1, 1):
+        fx, fy = pt[0] + nx * 4.2 * sgn, pt[1] + ny * 4.2 * sgn
+        s.raw(f'<line x1="{fx:.1f}" y1="{fy:.1f}" x2="{fx+ux*7:.1f}" y2="{fy+uy*7:.1f}" stroke="#C9D1D9" stroke-width="2.2" stroke-linecap="round"/>')
+
+
 def scene(s: SVG, x, y, w, h):
-    """Overhead camera view of a broiler pen, a drone's footprint, detections and tracks."""
-    s.raw(f'<defs><clipPath id="floor"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8"/></clipPath>'
-          f'<pattern id="tile" width="22" height="22" patternUnits="userSpaceOnUse" x="{x}" y="{y}">'
-          f'<path d="M22 0H0V22" fill="none" stroke="{GRID}" stroke-width="1"/></pattern>'
-          f'<radialGradient id="glow" cx="50%" cy="50%" r="50%">'
-          f'<stop offset="0" stop-color="{ACCENT}" stop-opacity="0.22"/><stop offset="1" stop-color="{ACCENT}" stop-opacity="0"/></radialGradient>'
-          f'<filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter></defs>')
-    s.raw(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{FLOOR}"/>')
-    s.raw(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="url(#tile)"/>')
-    s.raw(f'<g clip-path="url(#floor)">')
+    """Isometric broiler-house floor: feeder line, birds, a hovering drone whose camera
+    footprint holds the detections, and a ground robot inspecting a feeder pan."""
+    FW, FD = 300, 200                 # floor size in world units
+    iso = Iso(x + w / 2 + (FD - FW) * CX / 2 + 4, y + 56)
+    s.raw(f'<defs><filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>'
+          f'<filter id="blur2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>'
+          f'<radialGradient id="birdside" cx="0.38" cy="0.32" r="0.75"><stop offset="0" stop-color="#F7F9FB"/>'
+          f'<stop offset="1" stop-color="#BFC8D1"/></radialGradient>'
+          f'<radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="{ACCENT}" stop-opacity="0.26"/>'
+          f'<stop offset="1" stop-color="{ACCENT}" stop-opacity="0"/></radialGradient></defs>')
 
-    # feeder line with pans, and a drinker line
-    fy = y + h * 0.62
-    s.raw(f'<line x1="{x}" y1="{fy:.1f}" x2="{x+w}" y2="{fy:.1f}" stroke="{LINE}" stroke-width="2.2"/>')
-    for px in range(int(x + 24), int(x + w), 46):
-        s.raw(f'<circle cx="{px}" cy="{fy:.1f}" r="6" fill="{FLOOR}" stroke="{LINE}" stroke-width="1.8"/>')
-        s.raw(f'<circle cx="{px}" cy="{fy:.1f}" r="2" fill="{LINE}"/>')
-    dy = y + h * 0.22
-    s.raw(f'<line x1="{x}" y1="{dy:.1f}" x2="{x+w}" y2="{dy:.1f}" stroke="{LINE}" stroke-width="1.2" stroke-dasharray="3 6"/>')
+    # floor slab with thickness
+    T = 10
+    s.raw(f'<polygon points="{iso.pts([(0, FD, 0), (FW, FD, 0), (FW, FD, -T), (0, FD, -T)])}" fill="#0B0F14" stroke="{FLOOR_EDGE}" stroke-width="0.8"/>')
+    s.raw(f'<polygon points="{iso.pts([(FW, 0, 0), (FW, FD, 0), (FW, FD, -T), (FW, 0, -T)])}" fill="#10151C" stroke="{FLOOR_EDGE}" stroke-width="0.8"/>')
+    s.raw(f'<polygon points="{iso.pts([(0, 0, 0), (FW, 0, 0), (FW, FD, 0), (0, FD, 0)])}" fill="{FLOOR}" stroke="{FLOOR_EDGE}" stroke-width="0.8"/>')
+    for gx in range(25, FW, 25):
+        s.raw(f'<polyline points="{iso.pts([(gx, 0, 0), (gx, FD, 0)])}" fill="none" stroke="{GRID}" stroke-width="0.8"/>')
+    for gy in range(25, FD, 25):
+        s.raw(f'<polyline points="{iso.pts([(0, gy, 0), (FW, gy, 0)])}" fill="none" stroke="{GRID}" stroke-width="0.8"/>')
 
-    # drone camera footprint: everything inside is what the model sees
-    fx, fy0, fw, fh = x + 80, y + 34, 206, 150
-    s.raw(f'<rect x="{fx}" y="{fy0}" width="{fw}" height="{fh}" rx="6" fill="url(#glow)"/>')
-    s.raw(f'<rect x="{fx}" y="{fy0}" width="{fw}" height="{fh}" rx="6" fill="none" stroke="{ACCENT}" stroke-width="1" stroke-dasharray="4 5" opacity="0.8"/>')
+    # camera footprint on the floor, with its glow
+    fp = [(95, 50), (225, 50), (225, 140), (95, 140)]
+    s.raw(f'<polygon points="{iso.pts([(a, b, 0) for a, b in fp])}" fill="url(#glow)"/>')
+    s.raw(f'<polygon points="{iso.pts([(a, b, 0) for a, b in fp])}" fill="none" stroke="{ACCENT}" stroke-width="1" stroke-dasharray="4 5" opacity="0.85"/>')
 
-    # birds: (x, y, heading, scale, detected?)
-    birds = [
-        (x + 44, y + 70, 200, 0.95, False),
-        (x + 128, y + 66, 15, 1.0, True),
-        (x + 196, y + 92, -40, 1.0, True),
-        (x + 246, y + 76, 160, 0.9, True),
-        (x + 150, y + 140, 70, 1.0, True),
-        (x + 222, y + 150, -120, 0.95, True),
-        (x + 332, y + 200, 110, 0.9, False),
-        (x + 70, y + 196, 350, 0.95, False),
-        (x + 250, y + 228, 30, 1.0, False),
-        (x + 160, y + 230, 190, 0.9, False),
+    # tracks on the floor (where two birds came from)
+    for pts in ([(60, 122), (84, 126), (108, 119), (130, 112)], [(242, 136), (226, 122), (205, 110)]):
+        s.raw(f'<polyline points="{iso.pts([(a, b, 0) for a, b in pts])}" fill="none" stroke="{ACCENT}" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.7"/>')
+        for a, b in pts[:-1]:
+            floor_ellipse(s, iso, a, b, 1.6, fill=ACCENT, opacity="0.7")
+
+    # drone shadow + camera frustum (drawn behind everything that stands on the floor)
+    DX, DY, DZ = 160, 30, 80
+    floor_ellipse(s, iso, DX + 6, DY + 8, 18, fill="#000", opacity="0.45", filter="url(#blur)")
+    cam = iso.p(DX, DY + 10, DZ - 6)
+    for a, b in fp:
+        q = iso.p(a, b, 0)
+        s.raw(f'<line x1="{cam[0]:.1f}" y1="{cam[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}" stroke="{ACCENT}" stroke-width="0.8" opacity="0.28"/>')
+
+    # drinker line at the back (pipe at height, nipples)
+    a, b = iso.p(8, 20, 20), iso.p(FW - 8, 20, 20)
+    s.raw(f'<line x1="{a[0]:.1f}" y1="{a[1]:.1f}" x2="{b[0]:.1f}" y2="{b[1]:.1f}" stroke="{LINE}" stroke-width="1.6" stroke-linecap="round"/>')
+    for wx in range(30, FW - 10, 22):
+        a, b = iso.p(wx, 20, 20), iso.p(wx, 20, 15)
+        s.raw(f'<line x1="{a[0]:.1f}" y1="{a[1]:.1f}" x2="{b[0]:.1f}" y2="{b[1]:.1f}" stroke="{LINE}" stroke-width="1.2"/>')
+
+    # objects, painted back to front
+    items = []
+    FY = 128                                   # feeder line depth
+    for px_ in range(35, FW - 20, 50):          # pans with drop tubes, pipe segments between them
+        items.append((px_ + FY, "pan", px_))
+    items.append((0, "pipe", None))
+    birds = [  # (x, y, facing, scale, detected)
+        (50, 50, 1, 0.9, False), (110, 70, -1, 0.95, True), (165, 75, 1, 0.95, True),
+        (205, 110, -1, 0.95, True), (130, 112, 1, 0.95, True), (280, 80, -1, 0.9, False),
+        (255, 30, 1, 0.85, False), (150, 170, -1, 0.95, False), (232, 172, 1, 0.95, False),
+        (282, 150, -1, 0.9, False), (112, 178, 1, 0.9, False), (268, 192, -1, 0.9, False),
     ]
-    # tracks for two birds (where they came from)
-    trail(s, [(x + 60, y + 118), (x + 92, y + 134), (x + 122, y + 142), (x + 150, y + 140)])
-    trail(s, [(x + 186, y + 192), (x + 202, y + 172), (x + 222, y + 150)])
-    for bx, by, ang, sc, det in birds:
-        bird(s, bx, by, ang, sc)
-    for bx, by, ang, sc, det in birds:
-        if det:
-            brackets(s, *bird_bbox(bx, by, ang, sc))
-    # two labels only, sitting on the top-left corner of their boxes
-    for idx, conf in ((1, "broiler 0.97"), (5, "broiler 0.94")):
-        bx, by, ang, sc, _ = birds[idx]
-        x0, y0, _, _ = bird_bbox(bx, by, ang, sc)
-        label(s, x0, y0 - 5, conf)
+    for bx, by, f, sc, det in birds:
+        items.append((bx + by, "bird", (bx, by, f, sc, det)))
+    items.append((36 + 150 + 30, "ugv", None))
+    items.sort(key=lambda t: t[0])
 
-    dx_, dy_ = x + 334, y + 100
-    drone_shadow(s, dx_, dy_, 1.0)
-    s.raw("</g>")
-    s.raw(f'<rect x="{x+0.5}" y="{y+0.5}" width="{w-1}" height="{h-1}" rx="8" fill="none" stroke="{FLOOR_EDGE}"/>')
-    # the aircraft hovers to the right of its (forward-tilted) camera footprint
-    drone(s, dx_, dy_, 1.0)
+    for depth, kind, payload in items:
+        if kind == "pipe":
+            a, b = iso.p(8, FY, 18), iso.p(FW - 8, FY, 18)
+            s.raw(f'<line x1="{a[0]:.1f}" y1="{a[1]:.1f}" x2="{b[0]:.1f}" y2="{b[1]:.1f}" stroke="{LINE}" stroke-width="2.4" stroke-linecap="round"/>')
+        elif kind == "pan":
+            px_ = payload
+            a, b = iso.p(px_, FY, 18), iso.p(px_, FY, 5)
+            s.raw(f'<line x1="{a[0]:.1f}" y1="{a[1]:.1f}" x2="{b[0]:.1f}" y2="{b[1]:.1f}" stroke="{LINE}" stroke-width="1.6"/>')
+            floor_ellipse(s, iso, px_, FY, 7, fill="#2B3139", stroke=LINE, stroke_width="1.2")
+            floor_ellipse(s, iso, px_, FY, 3, fill=LINE)
+        elif kind == "bird":
+            bx, by, f, sc, det = payload
+            bird3d(s, iso, bx, by, f, sc)
+            if det:
+                wire_box(s, iso, bx - 14, by - 9, 0, 30, 18, 24, ACCENT)
+        elif kind == "ugv":
+            ugv3d(s, iso, 36, 150, arm=((46, 162, 14), (58, 152, 46), (78, 138, 34), (85, 131, 10)))
+
+    # labels on two detections: one above its box, one to the right of its box
+    ax, ay = iso.p(110, 61, 24)
+    label(s, ax - 44, ay - 16, "broiler 0.97")
+    bx_, by_ = iso.p(221, 101, 24)
+    label(s, bx_ + 6, by_ + 4, "broiler 0.94")
+
+    drone3d(s, iso, DX, DY, DZ)
 
 
 # ------------------------------------------------------------------ hero
@@ -236,7 +334,7 @@ def hero() -> SVG:
     s.text(x, 238, "PhD researcher, Texas A&M  ·  Co-founder, Smart Swine", "sans", 15, MUTED)
     s.text(x, 280, "ziyuanzhao.org  →", "sans", 18, ACCENT, weight=600)
 
-    scene(s, 486, 28, 384, 262)
+    scene(s, 470, 16, 410, 290)
 
     # now line along the bottom
     s.raw(f'<line x1="{x}" y1="316" x2="{W-30}" y2="316" stroke="{PANEL_EDGE}" stroke-width="1"/>')
