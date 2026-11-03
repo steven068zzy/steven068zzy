@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="372" viewBox="0 0 900 372" role="img" aria-labelledby="t">
+<title id="t">Ziyuan Zhao: robotics and computer vision for precision livestock farming. ziyuanzhao.org</title>
+<style>.sans{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif;}.mono{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;}</style>
+<rect x="0.5" y="0.5" width="899" height="371" rx="10" fill="#0D1117" stroke="#30363D"/>
+<text x="38" y="118" class="sans"><tspan font-size="56" font-weight="600" fill="#E6EDF3">Ziyuan Zhao</tspan><tspan dx="14" font-size="24" fill="#8B949E">Steven</tspan></text>
+<text x="40.0" y="166.0" class="sans" font-size="22" fill="#E6EDF3">Robotics &amp; computer vision</text>
+<text x="40.0" y="196.0" class="sans" font-size="22" fill="#E6EDF3">for precision livestock farming.</text>
+<text x="40.0" y="238.0" class="sans" font-size="15" fill="#8B949E">PhD researcher, Texas A&amp;M  ·  Co-founder, Smart Swine</text>
+<text x="40.0" y="280.0" class="sans" font-size="18" fill="#5DB39E" font-weight="600">ziyuanzhao.org  →</text>
+<defs><clipPath id="floor"><rect x="486" y="28" width="384" height="262" rx="8"/></clipPath><pattern id="tile" width="22" height="22" patternUnits="userSpaceOnUse" x="486" y="28"><path d="M22 0H0V22" fill="none" stroke="#1C2129" stroke-width="1"/></pattern><radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5DB39E" stop-opacity="0.22"/><stop offset="1" stop-color="#5DB39E" stop-opacity="0"/></radialGradient></defs>
+<rect x="486" y="28" width="384" height="262" rx="8" fill="#161B22"/>
+<rect x="486" y="28" width="384" height="262" rx="8" fill="url(#tile)"/>
+<g clip-path="url(#floor)">
+<line x1="486" y1="190.4" x2="870" y2="190.4" stroke="#484F58" stroke-width="2.2"/>
+<circle cx="510" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="510" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="556" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="556" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="602" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="602" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="648" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="648" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="694" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="694" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="740" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="740" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="786" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="786" cy="190.4" r="2" fill="#484F58"/>
+<circle cx="832" cy="190.4" r="6" fill="#161B22" stroke="#484F58" stroke-width="1.8"/>
+<circle cx="832" cy="190.4" r="2" fill="#484F58"/>
+<line x1="486" y1="85.6" x2="870" y2="85.6" stroke="#484F58" stroke-width="1.2" stroke-dasharray="3 6"/>
+<rect x="578" y="62" width="206" height="150" rx="6" fill="url(#glow)"/>
+<rect x="578" y="62" width="206" height="150" rx="6" fill="none" stroke="#5DB39E" stroke-width="1" stroke-dasharray="4 5" opacity="0.8"/>
+<path d="M546.0,146.0 L578.0,162.0 L608.0,170.0 L636.0,168.0" fill="none" stroke="#5DB39E" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.7"/>
+<circle cx="546.0" cy="146.0" r="1.8" fill="#5DB39E" opacity="0.7"/>
+<circle cx="578.0" cy="162.0" r="1.8" fill="#5DB39E" opacity="0.7"/>
+<circle cx="608.0" cy="170.0" r="1.8" fill="#5DB39E" opacity="0.7"/>
+<path d="M778.0,136.0 L756.0,158.0 L722.0,178.0" fill="none" stroke="#5DB39E" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.7"/>
+<circle cx="778.0" cy="136.0" r="1.8" fill="#5DB39E" opacity="0.7"/>
+<circle cx="756.0" cy="158.0" r="1.8" fill="#5DB39E" opacity="0.7"/>
+<ellipse cx="532.0" cy="101.0" rx="15.2" ry="10.4" transform="rotate(200 532.0 101.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="530.0" cy="98.0" rx="15.2" ry="10.4" transform="rotate(200 530.0 98.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M524.3,98.0 Q530.0,95.2 536.6,98.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(200 530.0 98.0)"/>
+<circle cx="514.8" cy="92.5" r="5.3" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M515.6,90.4 L509.5,90.5 L514.1,94.5 Z" fill="#D9A441"/>
+<ellipse cx="616.0" cy="97.0" rx="16.0" ry="11.0" transform="rotate(15 616.0 97.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="614.0" cy="94.0" rx="16.0" ry="11.0" transform="rotate(15 614.0 94.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M608.0,94.0 Q614.0,91.0 621.0,94.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(15 614.0 94.0)"/>
+<circle cx="630.4" cy="98.4" r="5.6" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M629.9,100.5 L636.2,100.0 L631.0,96.3 Z" fill="#D9A441"/>
+<ellipse cx="684.0" cy="123.0" rx="16.0" ry="11.0" transform="rotate(-40 684.0 123.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="682.0" cy="120.0" rx="16.0" ry="11.0" transform="rotate(-40 682.0 120.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M676.0,120.0 Q682.0,117.0 689.0,120.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(-40 682.0 120.0)"/>
+<circle cx="695.0" cy="109.1" r="5.6" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M696.4,110.8 L699.6,105.2 L693.6,107.4 Z" fill="#D9A441"/>
+<ellipse cx="746.0" cy="103.0" rx="14.4" ry="9.9" transform="rotate(160 746.0 103.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="744.0" cy="100.0" rx="14.4" ry="9.9" transform="rotate(160 744.0 100.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M738.6,100.0 Q744.0,97.3 750.3,100.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(160 744.0 100.0)"/>
+<circle cx="729.6" cy="105.2" r="5.0" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M728.9,103.2 L724.5,107.1 L730.4,107.3 Z" fill="#D9A441"/>
+<ellipse cx="638.0" cy="171.0" rx="16.0" ry="11.0" transform="rotate(70 638.0 171.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="636.0" cy="168.0" rx="16.0" ry="11.0" transform="rotate(70 636.0 168.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M630.0,168.0 Q636.0,165.0 643.0,168.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(70 636.0 168.0)"/>
+<circle cx="641.8" cy="184.0" r="5.6" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M639.7,184.7 L643.9,189.6 L643.9,183.2 Z" fill="#D9A441"/>
+<ellipse cx="724.0" cy="181.0" rx="15.2" ry="10.4" transform="rotate(-120 724.0 181.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="722.0" cy="178.0" rx="15.2" ry="10.4" transform="rotate(-120 722.0 178.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M716.3,178.0 Q722.0,175.2 728.6,178.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(-120 722.0 178.0)"/>
+<circle cx="713.9" cy="164.0" r="5.3" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M715.8,162.9 L711.1,159.1 L712.0,165.1 Z" fill="#D9A441"/>
+<ellipse cx="820.0" cy="143.0" rx="14.4" ry="9.9" transform="rotate(110 820.0 143.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="818.0" cy="140.0" rx="14.4" ry="9.9" transform="rotate(110 818.0 140.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M812.6,140.0 Q818.0,137.3 824.3,140.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(110 818.0 140.0)"/>
+<circle cx="812.8" cy="154.4" r="5.0" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M810.7,153.6 L810.9,159.5 L814.8,155.1 Z" fill="#D9A441"/>
+<ellipse cx="558.0" cy="227.0" rx="15.2" ry="10.4" transform="rotate(350 558.0 227.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="556.0" cy="224.0" rx="15.2" ry="10.4" transform="rotate(350 556.0 224.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M550.3,224.0 Q556.0,221.2 562.6,224.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(350 556.0 224.0)"/>
+<circle cx="571.9" cy="221.2" r="5.3" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M572.3,223.4 L577.5,220.2 L571.5,219.0 Z" fill="#D9A441"/>
+<ellipse cx="788.0" cy="245.0" rx="16.0" ry="11.0" transform="rotate(30 788.0 245.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="786.0" cy="242.0" rx="16.0" ry="11.0" transform="rotate(30 786.0 242.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M780.0,242.0 Q786.0,239.0 793.0,242.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(30 786.0 242.0)"/>
+<circle cx="800.7" cy="250.5" r="5.6" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M799.6,252.4 L805.9,253.5 L801.8,248.6 Z" fill="#D9A441"/>
+<ellipse cx="688.0" cy="259.0" rx="14.4" ry="9.9" transform="rotate(190 688.0 259.0)" fill="#000" opacity="0.35"/>
+<ellipse cx="686.0" cy="256.0" rx="14.4" ry="9.9" transform="rotate(190 686.0 256.0)" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M680.6,256.0 Q686.0,253.3 692.3,256.0" fill="none" stroke="#9DA7B3" stroke-width="0.7" opacity="0.7" transform="rotate(190 686.0 256.0)"/>
+<circle cx="670.9" cy="253.3" r="5.0" fill="#E6EDF3" stroke="#9DA7B3" stroke-width="0.8"/>
+<path d="M671.3,251.2 L665.6,252.4 L670.6,255.5 Z" fill="#D9A441"/>
+<path d="M594.3,85.6 L594.3,78.6 L601.3,78.6" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M640.2,85.6 L640.2,78.6 L633.2,78.6" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M594.3,102.4 L594.3,109.4 L601.3,109.4" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M640.2,102.4 L640.2,109.4 L633.2,109.4" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M663.9,108.2 L663.9,101.2 L670.9,101.2" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M703.6,108.2 L703.6,101.2 L696.6,101.2" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M663.9,130.3 L663.9,137.3 L670.9,137.3" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M703.6,130.3 L703.6,137.3 L696.6,137.3" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M720.5,92.5 L720.5,85.5 L727.5,85.5" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M761.9,92.5 L761.9,85.5 L754.9,85.5" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M720.5,107.5 L720.5,114.5 L727.5,114.5" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M761.9,107.5 L761.9,114.5 L754.9,114.5" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M620.3,155.5 L620.3,148.5 L627.3,148.5" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M651.7,155.5 L651.7,148.5 L644.7,148.5" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M620.3,186.6 L620.3,193.6 L627.3,193.6" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M651.7,186.6 L651.7,193.6 L644.7,193.6" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M706.2,162.1 L706.2,155.1 L713.2,155.1" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M737.8,162.1 L737.8,155.1 L730.8,155.1" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M706.2,189.2 L706.2,196.2 L713.2,196.2" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M737.8,189.2 L737.8,196.2 L730.8,196.2" fill="none" stroke="#5DB39E" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="594.3" y="62.6" width="94" height="14" rx="3" fill="#5DB39E"/>
+<text x="599.3" y="73.6" class="mono" font-size="10" fill="#0D1117" font-weight="600">broiler 0.97</text>
+<rect x="706.2" y="139.1" width="94" height="14" rx="3" fill="#5DB39E"/>
+<text x="711.2" y="150.1" class="mono" font-size="10" fill="#0D1117" font-weight="600">broiler 0.94</text>
+</g>
+<rect x="486.5" y="28.5" width="383" height="261" rx="8" fill="none" stroke="#30363D"/>
+<g transform="translate(778.0,56.0)">
+<line x1="0" y1="0" x2="10.6" y2="10.6" stroke="#E6EDF3" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="10.6" cy="10.6" r="8.5" fill="#E6EDF3" opacity="0.18" stroke="#E6EDF3" stroke-width="1"/>
+<circle cx="10.6" cy="10.6" r="1.6" fill="#E6EDF3"/>
+<line x1="0" y1="0" x2="-10.6" y2="10.6" stroke="#E6EDF3" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="-10.6" cy="10.6" r="8.5" fill="#E6EDF3" opacity="0.18" stroke="#E6EDF3" stroke-width="1"/>
+<circle cx="-10.6" cy="10.6" r="1.6" fill="#E6EDF3"/>
+<line x1="0" y1="0" x2="-10.6" y2="-10.6" stroke="#E6EDF3" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="-10.6" cy="-10.6" r="8.5" fill="#E6EDF3" opacity="0.18" stroke="#E6EDF3" stroke-width="1"/>
+<circle cx="-10.6" cy="-10.6" r="1.6" fill="#E6EDF3"/>
+<line x1="0" y1="0" x2="10.6" y2="-10.6" stroke="#E6EDF3" stroke-width="2.2" stroke-linecap="round"/>
+<circle cx="10.6" cy="-10.6" r="8.5" fill="#E6EDF3" opacity="0.18" stroke="#E6EDF3" stroke-width="1"/>
+<circle cx="10.6" cy="-10.6" r="1.6" fill="#E6EDF3"/>
+<rect x="-7.0" y="-7.0" width="14.0" height="14.0" rx="3.0" fill="#E6EDF3"/>
+<circle r="2.6" fill="#5DB39E"/>
+</g>
+<line x1="40" y1="316" x2="870" y2="316" stroke="#30363D" stroke-width="1"/>
+<text x="40" y="347" class="sans"><tspan class="mono" font-size="15" font-weight="600" fill="#5DB39E">$</tspan><tspan class="mono" font-size="15" font-weight="600" fill="#E6EDF3" dx="6">now</tspan><tspan font-size="15" fill="#E6EDF3" dx="18">LineGate-SLAM, UAV patrol in broiler houses</tspan><tspan font-size="15" fill="#6E7681" dx="10">·</tspan><tspan font-size="15" fill="#E6EDF3" dx="10">multi-object tracking review</tspan><tspan font-size="15" fill="#6E7681" dx="10">·</tspan><tspan font-size="15" fill="#E6EDF3" dx="10">SPM-01 piglet monitor</tspan><tspan class="mono" font-size="15" fill="#5DB39E" dx="8">█<animate attributeName="fill-opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite"/></tspan></text>
+</svg>

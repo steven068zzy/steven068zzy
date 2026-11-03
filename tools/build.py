@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Generate the two SVGs for the profile README, light and dark.
+"""Generate the hero SVG for the profile README.
 
-Run from the repo root:  uv run --with fonttools tools/build.py
+Run from the repo root:  uv run tools/build.py
 
-Text uses the viewer's system fonts (the same stack GitHub itself uses),
-nothing is embedded. Widths are estimated with Helvetica for layout only.
+One self-contained dark panel that reads the same on GitHub's light and dark
+themes (no dependency on prefers-color-scheme). Text uses the viewer's system
+fonts, nothing is embedded.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+import math
 from pathlib import Path
-
-from fontTools.ttLib import TTFont
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "assets"
@@ -20,169 +19,213 @@ OUT.mkdir(exist_ok=True)
 SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Helvetica,Arial,sans-serif"
 MONO = "ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace"
 
-# layout-only metrics: Helvetica for sans, Menlo for mono; widths get a safety factor
-_METRIC = {
-    "sans": TTFont("/System/Library/Fonts/Helvetica.ttc", fontNumber=0),
-    "mono": TTFont("/System/Library/Fonts/Menlo.ttc", fontNumber=0),
-}
-SAFETY = 1.08
-
-
-def measure(text: str, face: str, size: float) -> float:
-    f = _METRIC[face]
-    cmap = f.getBestCmap()
-    hmtx = f["hmtx"]
-    upm = f["head"].unitsPerEm
-    total = sum(hmtx[cmap.get(ord(c), cmap[ord("?")])][0] for c in text)
-    return total * size / upm * SAFETY
-
-
-@dataclass(frozen=True)
-class Theme:
-    name: str
-    ink: str
-    muted: str
-    faint: str
-    rule: str
-    hairline: str
-    canvas: str
-    accent: str
-
-
-THEMES = {
-    "light": Theme("light", ink="#1F2328", muted="#656D76", faint="#8C959F",
-                   rule="#D0D7DE", hairline="#E6EAEF", canvas="#FFFFFF", accent="#2F7D6B"),
-    "dark": Theme("dark", ink="#E6EDF3", muted="#8B949E", faint="#6E7681",
-                  rule="#30363D", hairline="#21262D", canvas="#0D1117", accent="#5DB39E"),
-}
-
-
-class SVG:
-    def __init__(self, w: int, h: int, t: Theme, title: str):
-        self.w, self.h, self.t, self.title = w, h, t, title
-        self.parts: list[str] = []
-
-    def text(self, x, y, s, face="sans", size=14, fill=None, weight=None, anchor="start"):
-        fill = fill or self.t.ink
-        attrs = [f'x="{x:.1f}"', f'y="{y:.1f}"', f'class="{face}"', f'font-size="{size}"', f'fill="{fill}"']
-        if weight:
-            attrs.append(f'font-weight="{weight}"')
-        if anchor != "start":
-            attrs.append(f'text-anchor="{anchor}"')
-        right = x + measure(s, face, size) * (1.1 if weight else 1.0)
-        if right > self.w - 2:
-            print(f"  ! overflow: {s[:40]!r} ends at {right:.0f} > {self.w}")
-        self.parts.append(f"<text {' '.join(attrs)}>{esc(s)}</text>")
-
-    def raw(self, s: str):
-        self.parts.append(s)
-
-    def render(self) -> str:
-        style = f".sans{{font-family:{SANS};}}.mono{{font-family:{MONO};}}"
-        body = "\n".join(self.parts)
-        return (
-            f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.w}" height="{self.h}" '
-            f'viewBox="0 0 {self.w} {self.h}" role="img" aria-labelledby="t">\n'
-            f'<title id="t">{esc(self.title)}</title>\n<style>{style}</style>\n{body}\n</svg>\n'
-        )
+# panel palette (GitHub dark tokens + one accent)
+PANEL = "#0D1117"
+PANEL_EDGE = "#30363D"
+FLOOR = "#161B22"
+FLOOR_EDGE = "#30363D"
+GRID = "#1C2129"
+INK = "#E6EDF3"
+MUTED = "#8B949E"
+FAINT = "#6E7681"
+LINE = "#484F58"
+ACCENT = "#5DB39E"
+ACCENT_DIM = "#2F5F53"
+BIRD = "#E6EDF3"
+BIRD_EDGE = "#9DA7B3"
 
 
 def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def write(name: str, svg: SVG):
-    path = OUT / f"{name}-{svg.t.name}.svg"
-    path.write_text(svg.render(), encoding="utf-8")
-    print(f"  {path.relative_to(ROOT)}  {path.stat().st_size/1024:.1f} KB")
+class SVG:
+    def __init__(self, w: int, h: int, title: str):
+        self.w, self.h, self.title = w, h, title
+        self.parts: list[str] = []
+
+    def raw(self, s: str):
+        self.parts.append(s)
+
+    def text(self, x, y, s, face="sans", size=14, fill=INK, weight=None, anchor="start", opacity=None):
+        attrs = [f'x="{x:.1f}"', f'y="{y:.1f}"', f'class="{face}"', f'font-size="{size}"', f'fill="{fill}"']
+        if weight:
+            attrs.append(f'font-weight="{weight}"')
+        if anchor != "start":
+            attrs.append(f'text-anchor="{anchor}"')
+        if opacity is not None:
+            attrs.append(f'opacity="{opacity}"')
+        self.parts.append(f"<text {' '.join(attrs)}>{esc(s)}</text>")
+
+    def render(self) -> str:
+        style = f".sans{{font-family:{SANS};}}.mono{{font-family:{MONO};}}"
+        return (
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.w}" height="{self.h}" '
+            f'viewBox="0 0 {self.w} {self.h}" role="img" aria-labelledby="t">\n'
+            f'<title id="t">{esc(self.title)}</title>\n<style>{style}</style>\n'
+            + "\n".join(self.parts) + "\n</svg>\n"
+        )
 
 
-W = 900
+# ------------------------------------------------------------------ scene parts
+def bird(s: SVG, x, y, ang_deg, sc=1.0):
+    """A broiler seen from above: body, head, beak."""
+    a = math.radians(ang_deg)
+    hx, hy = x + math.cos(a) * 17 * sc, y + math.sin(a) * 17 * sc
+    bx, by = x + math.cos(a) * 23 * sc, y + math.sin(a) * 23 * sc
+    # shadow
+    s.raw(f'<ellipse cx="{x+2:.1f}" cy="{y+3:.1f}" rx="{16*sc:.1f}" ry="{11*sc:.1f}" '
+          f'transform="rotate({ang_deg} {x+2:.1f} {y+3:.1f})" fill="#000" opacity="0.35"/>')
+    s.raw(f'<ellipse cx="{x:.1f}" cy="{y:.1f}" rx="{16*sc:.1f}" ry="{11*sc:.1f}" '
+          f'transform="rotate({ang_deg} {x:.1f} {y:.1f})" fill="{BIRD}" stroke="{BIRD_EDGE}" stroke-width="0.8"/>')
+    # wing crease
+    s.raw(f'<path d="M{x-6*sc:.1f},{y:.1f} Q{x:.1f},{y-3*sc:.1f} {x+7*sc:.1f},{y:.1f}" fill="none" stroke="{BIRD_EDGE}" '
+          f'stroke-width="0.7" opacity="0.7" transform="rotate({ang_deg} {x:.1f} {y:.1f})"/>')
+    s.raw(f'<circle cx="{hx:.1f}" cy="{hy:.1f}" r="{5.6*sc:.1f}" fill="{BIRD}" stroke="{BIRD_EDGE}" stroke-width="0.8"/>')
+    # beak
+    pa = a + math.pi / 2
+    s.raw(f'<path d="M{hx+math.cos(pa)*2.2:.1f},{hy+math.sin(pa)*2.2:.1f} L{bx:.1f},{by:.1f} '
+          f'L{hx-math.cos(pa)*2.2:.1f},{hy-math.sin(pa)*2.2:.1f} Z" fill="#D9A441"/>')
 
 
-def hero(t: Theme) -> SVG:
-    H = 300
-    s = SVG(W, H, t, "Ziyuan Zhao: robotics and computer vision for precision livestock farming. ziyuanzhao.org")
-    x = 4
-
-    # one <text> with tspans, so "Steven" follows the name whatever font the viewer has
-    s.raw(f'<text x="{x-2}" y="112" class="sans">'
-          f'<tspan font-size="58" font-weight="600" fill="{t.ink}">Ziyuan Zhao</tspan>'
-          f'<tspan dx="14" font-size="26" fill="{t.muted}">Steven</tspan></text>')
-
-    s.text(x, 162, "Robotics & computer vision", "sans", 22, t.ink)
-    s.text(x, 192, "for precision livestock farming.", "sans", 22, t.ink)
-
-    s.text(x, 234, "PhD researcher, Texas A&M  ·  Co-founder, Smart Swine", "sans", 15, t.muted)
-
-    # the website, set as the one coloured line of text
-    s.text(x, 276, "ziyuanzhao.org  →", "sans", 18, t.accent, weight=600)
-
-    # --- right: broiler house plan with a patrolling drone
-    hx, hy, hw, hh = 520, 34, 376, 232
-    s.raw(f'<defs><pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse" x="{hx}" y="{hy}">'
-          f'<path d="M16 0H0V16" fill="none" stroke="{t.hairline}" stroke-width="1"/></pattern></defs>')
-    s.raw(f'<rect x="{hx}" y="{hy}" width="{hw}" height="{hh}" rx="4" fill="url(#grid)"/>')
-    s.raw(f'<rect x="{hx}" y="{hy}" width="{hw}" height="{hh}" rx="4" fill="none" stroke="{t.rule}" stroke-width="1.2"/>')
-
-    n_lines = 4
-    pitch = hh / n_lines
-    lane_y = []
-    for i in range(n_lines):
-        ly = hy + pitch * (i + 0.5)
-        lane_y.append(ly)
-        s.raw(f'<line x1="{hx+18}" y1="{ly:.1f}" x2="{hx+hw-18}" y2="{ly:.1f}" stroke="{t.muted}" stroke-width="1.6" stroke-linecap="round"/>')
-        for px in range(int(hx + 34), int(hx + hw - 20), 34):
-            s.raw(f'<circle cx="{px}" cy="{ly:.1f}" r="2.6" fill="{t.canvas}" stroke="{t.muted}" stroke-width="1.2"/>')
-    for i in range(n_lines - 1):
-        dy = (lane_y[i] + lane_y[i + 1]) / 2
-        s.raw(f'<line x1="{hx+18}" y1="{dy:.1f}" x2="{hx+hw-18}" y2="{dy:.1f}" stroke="{t.faint}" stroke-width="1" stroke-dasharray="2 5" stroke-linecap="round"/>')
-
-    gaps = [hy + 14] + [(lane_y[i] + lane_y[i + 1]) / 2 for i in range(n_lines - 1)] + [hy + hh - 14]
-    ys = [gaps[0] + 2, gaps[1] - 9, gaps[2] + 9, gaps[3] - 9, gaps[4] - 2]
-    xl, xr = hx + 30, hx + hw - 30
-    d = f"M{xl},{ys[0]:.1f}"
-    for i, yy in enumerate(ys):
-        tx = xr if i % 2 == 0 else xl
-        d += f" L{tx},{yy:.1f}"
-        if i + 1 < len(ys):
-            d += f" L{tx},{ys[i+1]:.1f}"
-    s.raw(f'<path d="{d}" fill="none" stroke="{t.accent}" stroke-width="1.2" stroke-dasharray="1 6" stroke-linecap="round" opacity="0.9"/>')
-    dur = "34s"
-    s.raw(f'<g><circle r="9" fill="{t.accent}" opacity="0.18">'
-          f'<animateMotion dur="{dur}" repeatCount="indefinite" path="{d}"/></circle>'
-          f'<circle r="3.4" fill="{t.accent}">'
-          f'<animateMotion dur="{dur}" repeatCount="indefinite" path="{d}"/></circle></g>')
-    return s
+def bird_bbox(x, y, ang_deg, sc=1.0):
+    a = math.radians(ang_deg)
+    rx, ry = 16 * sc, 11 * sc
+    ex = math.sqrt((rx * math.cos(a)) ** 2 + (ry * math.sin(a)) ** 2)
+    ey = math.sqrt((rx * math.sin(a)) ** 2 + (ry * math.cos(a)) ** 2)
+    bx, by = x + math.cos(a) * 23 * sc, y + math.sin(a) * 23 * sc
+    x0, x1 = min(x - ex, bx) - 4, max(x + ex, bx) + 4
+    y0, y1 = min(y - ey, by) - 4, max(y + ey, by) + 4
+    return x0, y0, x1 - x0, y1 - y0
 
 
-def now(t: Theme) -> SVG:
-    H = 44
-    s = SVG(W, H, t, "Now: LineGate-SLAM, a multi-object-tracking review, SPM-01")
-    items = [
-        "LineGate-SLAM, UAV patrol in broiler houses",
-        "multi-object tracking review",
-        "SPM-01 piglet monitor",
+def brackets(s: SVG, x, y, w, h, color=ACCENT, L=7, sw=1.5):
+    """Corner brackets instead of a full box."""
+    for cx, cy, dx, dy in ((x, y, 1, 1), (x + w, y, -1, 1), (x, y + h, 1, -1), (x + w, y + h, -1, -1)):
+        s.raw(f'<path d="M{cx:.1f},{cy+dy*L:.1f} L{cx:.1f},{cy:.1f} L{cx+dx*L:.1f},{cy:.1f}" '
+              f'fill="none" stroke="{color}" stroke-width="{sw}" stroke-linecap="round"/>')
+
+
+def label(s: SVG, x, y, txt):
+    w = 7 * len(txt) + 10
+    s.raw(f'<rect x="{x:.1f}" y="{y-11:.1f}" width="{w}" height="14" rx="3" fill="{ACCENT}"/>')
+    s.text(x + 5, y, txt, "mono", 10, PANEL, weight=600)
+
+
+def trail(s: SVG, pts, color=ACCENT):
+    d = "M" + " L".join(f"{px:.1f},{py:.1f}" for px, py in pts)
+    s.raw(f'<path d="{d}" fill="none" stroke="{color}" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.7"/>')
+    for px, py in pts[:-1]:
+        s.raw(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="1.8" fill="{color}" opacity="0.7"/>')
+
+
+def drone(s: SVG, x, y, sc=1.0):
+    """Quadcopter from above, with its camera footprint on the floor."""
+    arm = 15 * sc
+    s.raw(f'<g transform="translate({x:.1f},{y:.1f})">')
+    for a in (45, 135, 225, 315):
+        ax, ay = math.cos(math.radians(a)) * arm, math.sin(math.radians(a)) * arm
+        s.raw(f'<line x1="0" y1="0" x2="{ax:.1f}" y2="{ay:.1f}" stroke="{INK}" stroke-width="{2.2*sc:.1f}" stroke-linecap="round"/>')
+        s.raw(f'<circle cx="{ax:.1f}" cy="{ay:.1f}" r="{8.5*sc:.1f}" fill="{INK}" opacity="0.18" stroke="{INK}" stroke-width="1"/>')
+        s.raw(f'<circle cx="{ax:.1f}" cy="{ay:.1f}" r="{1.6*sc:.1f}" fill="{INK}"/>')
+    s.raw(f'<rect x="{-7*sc:.1f}" y="{-7*sc:.1f}" width="{14*sc:.1f}" height="{14*sc:.1f}" rx="{3*sc:.1f}" fill="{INK}"/>')
+    s.raw(f'<circle r="{2.6*sc:.1f}" fill="{ACCENT}"/>')  # the camera
+    s.raw("</g>")
+
+
+def scene(s: SVG, x, y, w, h):
+    """Overhead camera view of a broiler pen, a drone's footprint, detections and tracks."""
+    s.raw(f'<defs><clipPath id="floor"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8"/></clipPath>'
+          f'<pattern id="tile" width="22" height="22" patternUnits="userSpaceOnUse" x="{x}" y="{y}">'
+          f'<path d="M22 0H0V22" fill="none" stroke="{GRID}" stroke-width="1"/></pattern>'
+          f'<radialGradient id="glow" cx="50%" cy="50%" r="50%">'
+          f'<stop offset="0" stop-color="{ACCENT}" stop-opacity="0.22"/><stop offset="1" stop-color="{ACCENT}" stop-opacity="0"/></radialGradient></defs>')
+    s.raw(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{FLOOR}"/>')
+    s.raw(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="url(#tile)"/>')
+    s.raw(f'<g clip-path="url(#floor)">')
+
+    # feeder line with pans, and a drinker line
+    fy = y + h * 0.62
+    s.raw(f'<line x1="{x}" y1="{fy:.1f}" x2="{x+w}" y2="{fy:.1f}" stroke="{LINE}" stroke-width="2.2"/>')
+    for px in range(int(x + 24), int(x + w), 46):
+        s.raw(f'<circle cx="{px}" cy="{fy:.1f}" r="6" fill="{FLOOR}" stroke="{LINE}" stroke-width="1.8"/>')
+        s.raw(f'<circle cx="{px}" cy="{fy:.1f}" r="2" fill="{LINE}"/>')
+    dy = y + h * 0.22
+    s.raw(f'<line x1="{x}" y1="{dy:.1f}" x2="{x+w}" y2="{dy:.1f}" stroke="{LINE}" stroke-width="1.2" stroke-dasharray="3 6"/>')
+
+    # drone camera footprint: everything inside is what the model sees
+    fx, fy0, fw, fh = x + 92, y + 34, 206, 150
+    s.raw(f'<rect x="{fx}" y="{fy0}" width="{fw}" height="{fh}" rx="6" fill="url(#glow)"/>')
+    s.raw(f'<rect x="{fx}" y="{fy0}" width="{fw}" height="{fh}" rx="6" fill="none" stroke="{ACCENT}" stroke-width="1" stroke-dasharray="4 5" opacity="0.8"/>')
+
+    # birds: (x, y, heading, scale, detected?)
+    birds = [
+        (x + 44, y + 70, 200, 0.95, False),
+        (x + 128, y + 66, 15, 1.0, True),
+        (x + 196, y + 92, -40, 1.0, True),
+        (x + 258, y + 72, 160, 0.9, True),
+        (x + 150, y + 140, 70, 1.0, True),
+        (x + 236, y + 150, -120, 0.95, True),
+        (x + 332, y + 112, 110, 0.9, False),
+        (x + 70, y + 196, 350, 0.95, False),
+        (x + 300, y + 214, 30, 1.0, False),
+        (x + 200, y + 228, 190, 0.9, False),
     ]
-    size = 15
-    # single <text>: the browser flows the tspans, so widths never depend on our metrics
-    parts = [f'<tspan class="mono" font-size="{size}" font-weight="600" fill="{t.accent}">$</tspan>',
-             f'<tspan class="mono" font-size="{size}" font-weight="600" fill="{t.ink}" dx="6">now</tspan>']
+    # tracks for two birds (where they came from)
+    trail(s, [(x + 60, y + 118), (x + 92, y + 134), (x + 122, y + 142), (x + 150, y + 140)])
+    trail(s, [(x + 292, y + 108), (x + 270, y + 130), (x + 236, y + 150)])
+    for bx, by, ang, sc, det in birds:
+        bird(s, bx, by, ang, sc)
+    for bx, by, ang, sc, det in birds:
+        if det:
+            brackets(s, *bird_bbox(bx, by, ang, sc))
+    # two labels only, sitting on the top-left corner of their boxes
+    for idx, conf in ((1, "broiler 0.97"), (5, "broiler 0.94")):
+        bx, by, ang, sc, _ = birds[idx]
+        x0, y0, _, _ = bird_bbox(bx, by, ang, sc)
+        label(s, x0, y0 - 5, conf)
+
+    s.raw("</g>")
+    s.raw(f'<rect x="{x+0.5}" y="{y+0.5}" width="{w-1}" height="{h-1}" rx="8" fill="none" stroke="{FLOOR_EDGE}"/>')
+    # the drone hovers top-right of its footprint
+    drone(s, fx + fw - 6, fy0 - 6, 1.0)
+
+
+# ------------------------------------------------------------------ hero
+W, H = 900, 372
+
+
+def hero() -> SVG:
+    s = SVG(W, H, "Ziyuan Zhao: robotics and computer vision for precision livestock farming. ziyuanzhao.org")
+    s.raw(f'<rect x="0.5" y="0.5" width="{W-1}" height="{H-1}" rx="10" fill="{PANEL}" stroke="{PANEL_EDGE}"/>')
+    x = 40
+    s.raw(f'<text x="{x-2}" y="118" class="sans">'
+          f'<tspan font-size="56" font-weight="600" fill="{INK}">Ziyuan Zhao</tspan>'
+          f'<tspan dx="14" font-size="24" fill="{MUTED}">Steven</tspan></text>')
+    s.text(x, 166, "Robotics & computer vision", "sans", 22, INK)
+    s.text(x, 196, "for precision livestock farming.", "sans", 22, INK)
+    s.text(x, 238, "PhD researcher, Texas A&M  ·  Co-founder, Smart Swine", "sans", 15, MUTED)
+    s.text(x, 280, "ziyuanzhao.org  →", "sans", 18, ACCENT, weight=600)
+
+    scene(s, 486, 28, 384, 262)
+
+    # now line along the bottom
+    s.raw(f'<line x1="{x}" y1="316" x2="{W-30}" y2="316" stroke="{PANEL_EDGE}" stroke-width="1"/>')
+    items = ["LineGate-SLAM, UAV patrol in broiler houses", "multi-object tracking review", "SPM-01 piglet monitor"]
+    parts = [f'<tspan class="mono" font-size="15" font-weight="600" fill="{ACCENT}">$</tspan>',
+             f'<tspan class="mono" font-size="15" font-weight="600" fill="{INK}" dx="6">now</tspan>']
     for i, it in enumerate(items):
-        parts.append(f'<tspan font-size="{size}" fill="{t.ink}" dx="{18 if i == 0 else 10}">{esc(it)}</tspan>')
+        parts.append(f'<tspan font-size="15" fill="{INK}" dx="{18 if i == 0 else 10}">{esc(it)}</tspan>')
         if i < len(items) - 1:
-            parts.append(f'<tspan font-size="{size}" fill="{t.faint}" dx="10">·</tspan>')
-    parts.append(f'<tspan class="mono" font-size="{size}" fill="{t.accent}" dx="8">█'
+            parts.append(f'<tspan font-size="15" fill="{FAINT}" dx="10">·</tspan>')
+    parts.append(f'<tspan class="mono" font-size="15" fill="{ACCENT}" dx="8">█'
                  f'<animate attributeName="fill-opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite"/></tspan>')
-    s.raw(f'<text x="4" y="28" class="sans">{"".join(parts)}</text>')
-    est = measure("$ now " + "  ·  ".join(items) + " █", "sans", size) + 60
-    if est > W - 2:
-        print(f"  ! now line estimate {est:.0f} > {W}")
+    s.raw(f'<text x="{x}" y="347" class="sans">{"".join(parts)}</text>')
     return s
 
 
 if __name__ == "__main__":
-    for t in THEMES.values():
-        print(f"[{t.name}]")
-        write("hero", hero(t))
-        write("now", now(t))
+    svg = hero()
+    path = OUT / "hero.svg"
+    path.write_text(svg.render(), encoding="utf-8")
+    print(f"  {path.relative_to(ROOT)}  {path.stat().st_size/1024:.1f} KB")
